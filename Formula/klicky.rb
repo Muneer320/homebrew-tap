@@ -11,11 +11,17 @@ class Klicky < Formula
   # Fixed package launcher and menu resource paths; upstream PR #94.
   patch :DATA
 
+  deny_network_access!
+
+  def fetch
+    system "cargo", "fetch", *std_cargo_fetch_args
+  end
+
   def install
     ENV["KLICKY_MACOS_INSTALL_BINARY"] = (opt_bin/"klicky").to_s
-    system "cargo", "build", "--locked", "--release"
+    system "cargo", "install", *std_cargo_args(root: libexec), "--bin", "klicky"
     system "swiftc", "packaging/macos/KlickyMenu.swift", "-o", "klicky-menu"
-    (libexec/"bin").install "target/release/klicky", "klicky-menu"
+    (libexec/"bin").install "klicky-menu"
     (share/"klicky").install "sounds"
     (share/"klicky/branding").install "assets/branding/klicky-menu-template.png",
                                    "assets/branding/klicky-menu-template@2x.png"

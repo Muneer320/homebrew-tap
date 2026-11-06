@@ -18,6 +18,7 @@ jobs:
       - name: Prepare tap and check formula
         run: |
           brew tap muneer320/tap "$GITHUB_WORKSPACE"
+          brew trust --formula muneer320/tap/klicky
           brew style muneer320/tap/klicky
       - name: Build and verify package
         run: |

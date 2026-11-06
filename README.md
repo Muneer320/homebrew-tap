@@ -34,7 +34,7 @@ To erase those preferences and custom packs too, delete `~/Library/Application S
 
 ## Package maintenance
 
-The formula verifies the immutable v0.5.0 source archive by SHA-256 and applies the small [managed-path adaptation](https://github.com/Muneer320/klicky/pull/94) as an inline patch. Released assets are unchanged. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
+The formula verifies the versioned v0.5.0 source archive by SHA-256 and applies the small [managed-path adaptation](https://github.com/Muneer320/klicky/pull/94) as an inline patch. Released assets are unchanged. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
 
 CI covers Apple Silicon and Intel source builds, formula style/audit, sound discovery, configuration persistence, stable launch paths, menu startup, reinstall and removal. Hosted runners do not provide an interactive Accessibility grant or physical latency measurements. Bottles and Homebrew/core admission are separate future work; this tap is directly installable without core acceptance.
 

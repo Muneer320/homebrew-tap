@@ -1,6 +1,8 @@
 # Klicky for Homebrew
 
-[Klicky](https://klicky.muneer320.tech/) adds mechanical keyboard sounds to your desktop. This project-owned tap builds the Rust app and native Swift menu helper for macOS, with all ten sound packs. Requires [Homebrew](https://brew.sh/) and Apple's Command Line Tools (`xcode-select --install`). Apple Silicon and Intel macOS packages are checked in CI.
+[Klicky](https://klicky.muneer320.tech/) adds mechanical keyboard sounds to your desktop. This project-owned tap builds the Rust app and native Swift menu helper for **Apple Silicon Macs**, with all ten sound packs. Requires [Homebrew](https://brew.sh/) and Apple's Command Line Tools (`xcode-select --install`).
+
+**Intel Mac?** Klicky still supports Intel through its [one-line source installer](https://klicky.muneer320.tech/#install). Homebrew has [ended supported Intel coverage and new Intel bottles](https://docs.brew.sh/Support-Tiers#future-macos-support), so this tap intentionally requires Apple Silicon instead of building Homebrew's compiler dependency chain on Intel.
 
 ## Install and start
 
@@ -36,6 +38,6 @@ To erase those preferences and custom packs too, delete `~/Library/Application S
 
 The formula verifies the versioned v0.5.0 source archive by SHA-256 and applies the small [managed-path adaptation](https://github.com/Muneer320/klicky/pull/94) as an inline patch. Released assets are unchanged. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
 
-CI covers Apple Silicon and Intel source builds, formula style/audit, sound discovery, configuration persistence, stable launch paths, menu startup, reinstall and removal. Hosted runners do not provide an interactive Accessibility grant or physical latency measurements. Bottles and Homebrew/core admission are separate future work; this tap is directly installable without core acceptance.
+CI covers Apple Silicon source builds, formula style/audit, sound discovery, configuration persistence, stable launch paths, menu registration, reinstall and removal. Hosted checks do not establish interactive Accessibility approval or physical latency measurements. Bottles and Homebrew/core admission are separate future work; this tap is directly installable without core acceptance.
 
 [Source and issues](https://github.com/Muneer320/klicky) · [User guide](https://klicky.muneer320.tech/guide.html) · [Package issue tracker](https://github.com/Muneer320/homebrew-tap/issues)

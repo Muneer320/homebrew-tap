@@ -6,6 +6,7 @@ class Klicky < Formula
   license "MIT"
 
   depends_on "rust" => :build
+  depends_on arch: :arm64
   depends_on :macos
 
   # Fixed package launcher and menu resource paths; upstream PR #94.

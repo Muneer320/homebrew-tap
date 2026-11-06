@@ -11,11 +11,7 @@ permissions:
   contents: read
 jobs:
   macos:
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-15, macos-15-intel]
-    runs-on: ${{ matrix.os }}
+    runs-on: macos-15
     timeout-minutes: 30
     env:
       HOMEBREW_NO_AUTO_UPDATE: 1

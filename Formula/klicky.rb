@@ -57,6 +57,7 @@ class Klicky < Formula
   end
 
   service do
+    name macos: "dev.klicky.homebrew-menu"
     run opt_bin/"klicky-menu"
     keep_alive false
     require_root false

@@ -38,7 +38,7 @@ jobs:
       - name: Register menu and daemon through stable package paths
         run: |
           brew services start muneer320/tap/klicky
-          launchctl print "gui/$(id -u)/homebrew.mxcl.klicky"
+          launchctl print "gui/$(id -u)/dev.klicky.homebrew-menu"
           # The hosted session has no user Accessibility grant. Registration is
           # checked even when readiness reports that expected missing permission.
           set +e
@@ -63,7 +63,7 @@ jobs:
           brew uninstall muneer320/tap/klicky
           test ! -e "$(brew --prefix)/opt/klicky"
           test ! -e "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist"
-          test ! -e "$HOME/Library/LaunchAgents/homebrew.mxcl.klicky.plist"
+          test ! -e "$HOME/Library/LaunchAgents/dev.klicky.homebrew-menu.plist"
           shasum -a 256 --check "$RUNNER_TEMP/config.sha256"
       - name: Stop jobs after failures
         if: always()

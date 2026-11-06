@@ -1,0 +1,73 @@
+name: macOS package lifecycle
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: package-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  macos:
+    runs-on: macos-15
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare tap and check formula
+        run: |
+          brew update
+          brew --version
+          brew tap muneer320/tap "$GITHUB_WORKSPACE"
+          brew trust --formula muneer320/tap/klicky
+          brew style muneer320/tap/klicky
+      - name: Build and verify package
+        run: |
+          brew install --build-from-source muneer320/tap/klicky
+          brew test muneer320/tap/klicky
+          brew audit --strict muneer320/tap/klicky
+          klicky list
+          klicky volume 0.4
+          shasum -a 256 "$HOME/Library/Application Support/klicky/config.toml" > "$RUNNER_TEMP/config.sha256"
+      - name: Register menu and daemon through stable package paths
+        run: |
+          brew services start muneer320/tap/klicky
+          launchctl print "gui/$(id -u)/dev.klicky.homebrew-menu"
+          # Registration can be checked without an interactive input/audio
+          # session. A readiness timeout is reported, not counted as playback proof.
+          set +e
+          klicky service enable > "$RUNNER_TEMP/enable.log" 2>&1
+          result=$?
+          set -e
+          cat "$RUNNER_TEMP/enable.log"
+          if [ "$result" -ne 0 ]; then
+            grep -F 'daemon did not become responsive within 3 seconds' "$RUNNER_TEMP/enable.log"
+            echo '::notice::Daemon readiness unavailable in this hosted session; registration only was checked.'
+          fi
+          /usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist" > "$RUNNER_TEMP/launcher"
+          test "$(cat "$RUNNER_TEMP/launcher")" = "$(brew --prefix)/opt/klicky/bin/klicky"
+          klicky service disable
+          brew services stop muneer320/tap/klicky
+      - name: Reinstall and remove, preserving settings
+        run: |
+          brew reinstall --build-from-source muneer320/tap/klicky
+          brew test muneer320/tap/klicky
+          shasum -a 256 --check "$RUNNER_TEMP/config.sha256"
+          klicky service disable
+          brew services stop muneer320/tap/klicky
+          brew uninstall muneer320/tap/klicky
+          test ! -e "$(brew --prefix)/opt/klicky"
+          test ! -e "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist"
+          test ! -e "$HOME/Library/LaunchAgents/dev.klicky.homebrew-menu.plist"
+          shasum -a 256 --check "$RUNNER_TEMP/config.sha256"
+      - name: Stop jobs after failures
+        if: always()
+        run: |
+          if command -v klicky >/dev/null; then
+            klicky service disable || true
+            brew services stop muneer320/tap/klicky || true
+          fi

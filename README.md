@@ -8,7 +8,7 @@
 brew install muneer320/tap/klicky && brew services start muneer320/tap/klicky && klicky service enable
 ```
 
-The initial installation compiles from source, so allow a few minutes. **macOS must ask you for Accessibility permission.** Allow the binary shown by `brew info klicky` under System Settings → Privacy & Security → Accessibility, then run `klicky service start`. A terminal command cannot approve this permission for you.
+Use an up-to-date Homebrew; run `brew update` first if you have disabled its automatic updates. The formula uses Homebrew's dependency-fetch phase before an offline build. The initial installation compiles from source, so allow a few minutes. **macOS must ask you for Accessibility permission.** Allow the binary shown by `brew info klicky` under System Settings → Privacy & Security → Accessibility, then run `klicky service start`. A terminal command cannot approve this permission for you.
 
 Homebrew manages the menu helper; Klicky's menu and `service` commands manage its separate sound daemon. To omit the menu, leave out `brew services start muneer320/tap/klicky`. Use the menu's power control to stop/start sounds without losing the menu itself. Quitting the menu leaves sounds running.
 

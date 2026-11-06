@@ -24,6 +24,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Prepare tap and check formula
         run: |
+          brew update
+          brew --version
           brew tap muneer320/tap "$GITHUB_WORKSPACE"
           brew trust --formula muneer320/tap/klicky
           brew style muneer320/tap/klicky
@@ -69,5 +71,7 @@ jobs:
       - name: Stop jobs after failures
         if: always()
         run: |
-          if command -v klicky >/dev/null; then klicky service disable || true; fi
-          brew services stop muneer320/tap/klicky || true
+          if command -v klicky >/dev/null; then
+            klicky service disable || true
+            brew services stop muneer320/tap/klicky || true
+          fi

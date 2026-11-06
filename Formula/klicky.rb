@@ -30,7 +30,8 @@ class Klicky < Formula
     (bin/"klicky-menu").write_env_script opt_libexec/"bin/klicky-menu",
                                        KLICKY_MENU_CLI:  opt_bin/"klicky",
                                        KLICKY_MENU_ICON: opt_share/"klicky/branding/klicky-menu-template.png"
-    doc.install "ACKNOWLEDGEMENTS.md", "LICENSE", "sounds/LICENSE.md" => "SOUNDS-LICENSE.md"
+    doc.install "ACKNOWLEDGEMENTS.md", "LICENSE"
+    doc.install share/"klicky/sounds/LICENSE.md" => "SOUNDS-LICENSE.md"
   end
 
   def caveats

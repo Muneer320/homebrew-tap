@@ -39,15 +39,16 @@ jobs:
         run: |
           brew services start muneer320/tap/klicky
           launchctl print "gui/$(id -u)/dev.klicky.homebrew-menu"
-          # The hosted session has no user Accessibility grant. Registration is
-          # checked even when readiness reports that expected missing permission.
+          # Registration can be checked without an interactive input/audio
+          # session. A readiness timeout is reported, not counted as playback proof.
           set +e
           klicky service enable > "$RUNNER_TEMP/enable.log" 2>&1
           result=$?
           set -e
           cat "$RUNNER_TEMP/enable.log"
           if [ "$result" -ne 0 ]; then
-            grep -Ei 'accessibility|permission|ready|readiness|exit|timed out' "$RUNNER_TEMP/enable.log"
+            grep -F 'daemon did not become responsive within 3 seconds' "$RUNNER_TEMP/enable.log"
+            echo '::notice::Daemon readiness unavailable in this hosted session; registration only was checked.'
           fi
           /usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist" > "$RUNNER_TEMP/launcher"
           test "$(cat "$RUNNER_TEMP/launcher")" = "$(brew --prefix)/opt/klicky/bin/klicky"

@@ -22,16 +22,16 @@ class Klicky < Formula
     system "cargo", "install", *std_cargo_args(root: libexec), "--bin", "klicky"
     system "swiftc", "packaging/macos/KlickyMenu.swift", "-o", "klicky-menu"
     (libexec/"bin").install "klicky-menu"
-    (share/"klicky").install "sounds"
-    (share/"klicky/branding").install "assets/branding/klicky-menu-template.png",
-                                   "assets/branding/klicky-menu-template@2x.png"
+    pkgshare.install "sounds"
+    (pkgshare/"branding").install "assets/branding/klicky-menu-template.png",
+                                 "assets/branding/klicky-menu-template@2x.png"
     (bin/"klicky").write_env_script opt_libexec/"bin/klicky",
-                                  KLICKY_SYSTEM_SOUNDS_DIR: opt_share/"klicky/sounds"
+                                  KLICKY_SYSTEM_SOUNDS_DIR: opt_pkgshare/"sounds"
     (bin/"klicky-menu").write_env_script opt_libexec/"bin/klicky-menu",
                                        KLICKY_MENU_CLI:  opt_bin/"klicky",
-                                       KLICKY_MENU_ICON: opt_share/"klicky/branding/klicky-menu-template.png"
+                                       KLICKY_MENU_ICON: opt_pkgshare/"branding/klicky-menu-template.png"
     doc.install "ACKNOWLEDGEMENTS.md", "LICENSE"
-    doc.install share/"klicky/sounds/LICENSE.md" => "SOUNDS-LICENSE.md"
+    doc.install pkgshare/"sounds/LICENSE.md" => "SOUNDS-LICENSE.md"
   end
 
   def caveats

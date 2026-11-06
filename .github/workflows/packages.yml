@@ -1,0 +1,64 @@
+name: macOS package lifecycle
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+      HOMEBREW_NO_INSTALL_CLEANUP: 1
+    steps:
+      - uses: actions/checkout@v5
+      - name: Prepare tap and check formula
+        run: |
+          brew tap muneer320/tap "$GITHUB_WORKSPACE"
+          brew style muneer320/tap/klicky
+      - name: Build and verify package
+        run: |
+          brew install --build-from-source muneer320/tap/klicky
+          brew test muneer320/tap/klicky
+          brew audit --strict muneer320/tap/klicky
+          klicky list
+          klicky volume 0.4
+          shasum -a 256 "$HOME/Library/Application Support/klicky/config.toml" > "$RUNNER_TEMP/config.sha256"
+      - name: Register menu and daemon through stable package paths
+        run: |
+          brew services start muneer320/tap/klicky
+          launchctl print "gui/$(id -u)/homebrew.mxcl.klicky"
+          # The hosted session has no user Accessibility grant. Registration is
+          # checked even when readiness reports that expected missing permission.
+          set +e
+          klicky service enable > "$RUNNER_TEMP/enable.log" 2>&1
+          result=$?
+          set -e
+          cat "$RUNNER_TEMP/enable.log"
+          if [ "$result" -ne 0 ]; then
+            grep -Ei 'accessibility|permission|ready|readiness|exit|timed out' "$RUNNER_TEMP/enable.log"
+          fi
+          /usr/libexec/PlistBuddy -c 'Print :ProgramArguments:0' "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist" > "$RUNNER_TEMP/launcher"
+          test "$(cat "$RUNNER_TEMP/launcher")" = "$(brew --prefix)/opt/klicky/bin/klicky"
+          klicky service disable
+          brew services stop muneer320/tap/klicky
+      - name: Reinstall and remove, preserving settings
+        run: |
+          brew reinstall --build-from-source muneer320/tap/klicky
+          brew test muneer320/tap/klicky
+          shasum -a 256 --check "$RUNNER_TEMP/config.sha256"
+          klicky service disable
+          brew services stop muneer320/tap/klicky
+          brew uninstall muneer320/tap/klicky
+          test ! -e "$(brew --prefix)/opt/klicky"
+          test ! -e "$HOME/Library/LaunchAgents/dev.klicky.daemon.plist"
+          test ! -e "$HOME/Library/LaunchAgents/homebrew.mxcl.klicky.plist"
+          shasum -a 256 --check "$RUNNER_TEMP/config.sha256"
+      - name: Stop jobs after failures
+        if: always()
+        run: |
+          if command -v klicky >/dev/null; then klicky service disable || true; fi
+          brew services stop muneer320/tap/klicky || true

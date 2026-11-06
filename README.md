@@ -20,7 +20,7 @@ Use one installation method. Before switching from the source installer, run its
 klicky service stop && brew update && brew upgrade muneer320/tap/klicky && brew services restart muneer320/tap/klicky && klicky service start
 ```
 
-The launchers and resource paths remain stable through Homebrew's `opt` directory. macOS may require Accessibility approval again after rebuilding the executable. Settings remain in `~/Library/Application Support/klicky`.
+If you opted out of the menu, omit `brew services restart muneer320/tap/klicky` from that line. The launchers and resource paths remain stable through Homebrew's `opt` directory. macOS may require Accessibility approval again after rebuilding the executable. Settings remain in `~/Library/Application Support/klicky`.
 
 ## Remove completely
 

@@ -12,7 +12,7 @@ brew install muneer320/tap/klicky && brew services start muneer320/tap/klicky &&
 
 Use an up-to-date Homebrew; run `brew update` first if you have disabled its automatic updates. The formula uses Homebrew's dependency-fetch phase before an offline build. The initial installation compiles from source, so allow a few minutes. **macOS must ask you for Accessibility permission.** Allow the binary shown by `brew info klicky` under System Settings → Privacy & Security → Accessibility, then run `klicky service start`. A terminal command cannot approve this permission for you.
 
-Homebrew manages the menu helper; Klicky's menu and `service` commands manage its separate sound daemon. To omit the menu, leave out `brew services start muneer320/tap/klicky`. Use the menu's power control to stop/start sounds without losing the menu itself. Quitting the menu leaves sounds running.
+Homebrew manages the menu helper; Klicky's menu and `service` commands manage its separate sound daemon. To omit the menu, leave out `brew services start muneer320/tap/klicky`. Use Pause/Resume, Volume and Sound Pack in the menu; engine Start/Stop and login startup are separate controls. Quitting the menu leaves sounds running.
 
 Use one installation method. Before switching from the source installer, run its [uninstall command](https://klicky.muneer320.tech/guide.html) without purge. Your saved preferences and custom packs will carry over. Do not run a source-installed menu helper alongside this one.
 
@@ -36,7 +36,7 @@ To erase those preferences and custom packs too, delete `~/Library/Application S
 
 ## Package maintenance
 
-The formula verifies the versioned v0.5.0 source archive by SHA-256 and applies the small [managed-path adaptation](https://github.com/Muneer320/klicky/pull/94) as an inline patch. Released assets are unchanged. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
+The formula verifies the versioned v0.6.1 source archive by SHA-256. Managed launch and resource paths are supported upstream, so no inline patch is needed. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
 
 CI covers Apple Silicon source builds, formula style/audit, sound discovery, configuration persistence, stable launch paths, menu registration, reinstall and removal. Hosted checks do not establish interactive Accessibility approval or physical latency measurements. Bottles and Homebrew/core admission are separate future work; this tap is directly installable without core acceptance.
 

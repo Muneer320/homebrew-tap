@@ -18,6 +18,10 @@ Use one installation method. Before switching from the source installer, run its
 
 ## Update
 
+From v0.7.0, run `klicky update --check` to check for a release, or `klicky update` for a confirmed Homebrew update. It restores the engine's running/paused state and restarts an already-running menu helper without enabling login startup.
+
+For an older version, or a manual update:
+
 ```bash
 klicky service stop && brew update && brew upgrade muneer320/tap/klicky && brew services restart muneer320/tap/klicky && klicky service start
 ```
@@ -36,7 +40,7 @@ To erase those preferences and custom packs too, delete `~/Library/Application S
 
 ## Package maintenance
 
-The formula verifies the versioned v0.6.1 source archive by SHA-256. Managed launch and resource paths are supported upstream, so no inline patch is needed. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
+The formula verifies the versioned v0.7.0 source archive by SHA-256. Managed launch and resource paths are supported upstream, so no inline patch is needed. It installs only into Homebrew's managed prefix; it does not modify your home directory or start monitoring during the build.
 
 CI covers Apple Silicon source builds, formula style/audit, sound discovery, configuration persistence, stable launch paths, menu registration, reinstall and removal. Hosted checks do not establish interactive Accessibility approval or physical latency measurements. Bottles and Homebrew/core admission are separate future work; this tap is directly installable without core acceptance.
 

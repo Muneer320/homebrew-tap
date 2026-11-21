@@ -1,8 +1,8 @@
 class Klicky < Formula
   desc "Mechanical keyboard sounds for desktop sessions"
   homepage "https://klicky.muneer320.tech/"
-  url "https://github.com/Muneer320/klicky/releases/download/v0.6.1/klicky-0.6.1-source.tar.gz"
-  sha256 "a65648c30d56a5177ff560606cd3a50535e5e6f02adf8822660bbcab2739df9c"
+  url "https://github.com/Muneer320/klicky/releases/download/v0.7.0/klicky-0.7.0-source.tar.gz"
+  sha256 "7b66ba231fef19bbc0a7c09843f90e989a0b77731f9983285a7cb893cc0c1577"
   license "MIT"
 
   depends_on "rust" => :build
@@ -43,7 +43,8 @@ class Klicky < Formula
       Allow it in System Settings > Privacy & Security > Accessibility,
       then run: klicky service start
 
-      Before upgrading, stop the daemon with: klicky service stop
+      For a confirmed update that restores playback state: klicky update
+      For manual upgrades, stop the daemon with: klicky service stop
       After upgrading, run: klicky service start
 
       Before uninstalling, remove both user login services:
